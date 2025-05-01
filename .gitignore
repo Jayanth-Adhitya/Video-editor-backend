@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+*.env.*
+!.env.example
+
+# Log files
+*.log
+logs/
+
+# Build output
+dist/
+build/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Uploads (if you don't want to commit example uploads)
+uploads/raw/*
+uploads/processed/*
+!uploads/.gitkeep # Keep empty directories in git if needed
+
+# Prisma generated client
+# node_modules/@prisma/client (covered by node_modules/)
+# Uncomment if your prisma client is located elsewhere
+# src/generated/prisma/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*~

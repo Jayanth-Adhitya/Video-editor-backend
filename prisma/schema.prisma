@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Video {
+  id                String   @id @default(uuid())
+  originalName      String
+  fileName          String // Name of the file stored on disk/S3 (raw)
+  filePath          String // Path to the original uploaded file
+  processedFileName String? // Name of the final rendered file
+  processedFilePath String? // Path to the final rendered file
+  size              BigInt
+  duration          Float? // Duration in seconds
+  status            Status   @default(UPLOADED)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  edits EditOperation[] // Relation to edit operations
+
+  @@index([status])
+}
+
+model EditOperation {
+  id        String      @id @default(uuid())
+  videoId   String
+  video     Video       @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  type      EditType
+  startTime Float? // For trim, subtitle
+  endTime   Float? // For trim, subtitle
+  text      String? // For subtitle
+  // Add other parameters as needed (e.g., position for text/image, audio file path)
+  order     Int // To maintain order of operations
+  createdAt DateTime    @default(now())
+
+  @@index([videoId])
+  @@index([videoId, order])
+}
+
+enum Status {
+  UPLOADING   // Optional: If tracking upload progress is needed
+  UPLOADED    // Initial state after successful upload
+  QUEUED      // Added to the rendering queue
+  PROCESSING  // Rendering is in progress
+  READY       // Rendering complete, ready for download
+  FAILED      // Rendering or processing failed
+}
+
+enum EditType {
+  TRIM
+  SUBTITLE
+  // Add more types: AUDIO_MOD, ADD_TEXT, ADD_IMAGE etc.
+}
