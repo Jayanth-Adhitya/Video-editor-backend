@@ -137,7 +137,6 @@ The API server will typically be running on `http://localhost:3000`.
     *   Only works if the video status is `READY`.
     *   **Response:** The video file stream.
 
-*(See Postman collection or Swagger docs for detailed request/response examples - if you add them)*
 
 ## Scripts
 
